@@ -1131,44 +1131,45 @@
         })();
     </script>
 	
-	<script>
-	  /* 🔍 สคริปต์ตรวจจับขนาดหน้าจอจริงของเครื่อง (ทะลุผ่าน iframe) เพื่อ Zoom Out อัตโนมัติ */
-	  (function() {
-		function autoScaleForSmallScreen() {
-		  // window.screen.height คือความสูงหน้าจอจริงของเครื่องผู้ใช้ (จอ 1366x768 จะได้ค่า 768)
-		  var realScreenHeight = window.screen.height;
-		  var realScreenWidth = window.screen.width;
+<script>
+  /* 📐 ย่อสเกลทุกอย่างลงด้วย CSS transform: scale() เมื่อเปิดบนจอเล็ก/จอเตี้ย */
+  (function() {
+    function scalePageForSmallScreen() {
+      // ดึงความสูงและความกว้างหน้าจอจริงของเครื่องผู้ใช้ (ทะลุผ่าน iframe ได้)
+      var screenHeight = window.screen.height;
+      var screenWidth = window.screen.width;
+      var mainContainer = document.querySelector('main'); // ดึงส่วนเนื้อหาหลักทั้งหมด
 
-		  // ถ้าเป็นจอแล็ปท็อป/จอเตี้ย (ความสูงจอไม่เกิน 820px หรือ ความกว้างไม่เกิน 1400px)
-		  if (realScreenHeight <= 820 || realScreenWidth <= 1400) {
+      if (!mainContainer) return;
 
-			// สั่ง Zoom Out ลงเหลือ 82%
-			document.body.style.zoom = "82%";
+      // ถ้าเป็นหน้าจอเตี้ย หรือแล็ปท็อป (ความสูงจอไม่เกิน 820px หรือความกว้างไม่เกิน 1400px)
+      if (screenHeight <= 820 || screenWidth <= 1400) {
+        var scaleRatio = 0.82; // สเกลย่อลงเหลือ 82% (ปรับตัวเลขตามต้องการได้ เช่น 0.80 หรือ 0.85)
 
-			// สำรองสำหรับเบราว์เซอร์ที่ไม่รองรับ zoom (เช่น Firefox) ให้ใช้ transform แทน
-			if (!('zoom' in document.body.style)) {
-			  document.body.style.transform = "scale(0.82)";
-			  document.body.style.transformOrigin = "top center";
-			  document.body.style.width = "122%"; /* ชดเชยความกว้างที่ถูกหด */
-			}
-		  } else {
-			// จอคอมพิวเตอร์ขนาดใหญ่ ให้แสดงผล 100% ตามปกติ
-			document.body.style.zoom = "100%";
-			document.body.style.transform = "none";
-		  }
-		}
+        mainContainer.style.transform = "scale(" + scaleRatio + ")";
+        mainContainer.style.transformOrigin = "top center"; // ยึดจุดหมุนไว้ที่ตรงกลางด้านบน
+        mainContainer.style.width = (100 / scaleRatio) + "%"; // ขยายความกว้างชดเชยไม่ให้ติดขอบข้าง
+        mainContainer.style.marginLeft = -((100 / scaleRatio - 100) / 2) + "%"; // จัดกึ่งกลางชดเชย
+      } else {
+        // จอคอมพิวเตอร์ขนาดใหญ่ แสดงผลสเกล 100% ตามปกติ
+        mainContainer.style.transform = "none";
+        mainContainer.style.width = "100%";
+        mainContainer.style.marginLeft = "0";
+      }
+    }
 
-		// ทำงานทันทีเมื่อโหลดหน้าเว็บเสร็จ
-		if (document.readyState === 'loading') {
-		  document.addEventListener('DOMContentLoaded', autoScaleForSmallScreen);
-		} else {
-		  autoScaleForSmallScreen();
-		}
+    // สั่งทำงานทันทีที่โหลดหน้าเว็บเสร็จ
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', scalePageForSmallScreen);
+    } else {
+      scalePageForSmallScreen();
+    }
 
-		// ทำงานเมื่อมีการขยับขนาดหน้าจอ
-		window.addEventListener('resize', autoScaleForSmallScreen);
-	  })();
-	</script>	
+    // สั่งคำนวณใหม่เมื่อมีการปรับขนาดหน้าจอ
+    window.addEventListener('resize', scalePageForSmallScreen);
+  })();
+</script>	
+	
 	
 </body>
 </html>
