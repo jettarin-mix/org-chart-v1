@@ -228,14 +228,171 @@
             height: 280px !important;
         }
 		
+		/* ============================================================
+		   📌 ปรับแต่ง Spotlight สำหรับหน้าจอที่มีความสูงน้อย (เช่น 1366x768)
+		   ============================================================ */
+		@media (min-width: 1024px) and (max-height: 820px) {
+			/* 1. ปรับตำแหน่งการยึดติด (Sticky) ให้ชิดขอบบนมากขึ้น */
+			.spotlight-3d-wrapper {
+				top: 0.75rem !important;
+			}
 
-		/* 🔍 ย่อสเกลหน้าเว็บทั้งหมดลงเหลือ 82% เมื่อเปิดบนหน้าจอเตี้ย (เช่น 1366x768 หรือใน iframe) */
-		@media (max-height: 820px) {
-			body {
-				zoom: 72%; /* เบราว์เซอร์สมัยใหม่ (Chrome, Edge, Safari, Firefox) รองรับแล้ว */
+			/* 2. ย่อความสูงกรอบรูปถ่ายไดคัทลง (จากเดิม 400px เหลือ 210px) */
+			.spotlight-layer-portrait > div {
+				height: 210px !important;
+				width: 100% !important;
+			}
+
+			/* 3. ปรับขนาดวงกลมแสงออร่า (Glow Effect) ให้เล็กลงตามรูป */
+			#spotlight-bg-glow {
+				width: 180px !important;
+				height: 180px !important;
+				top: 0 !important;
+			}
+
+			/* 4. กระชับระยะห่าง (Padding & Space) ภายในกล่องข้อความกระจก */
+			#spotlight-glass-box > div:last-child {
+				padding-top: 0.75rem !important;
+				padding-bottom: 1rem !important;
+				padding-left: 1.25rem !important;
+				padding-right: 1.25rem !important;
+				space-y: 0.5rem !important;
+			}
+
+			#spotlight-glass-box .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+				margin-top: 0.5rem !important;
+			}
+
+			/* 5. ย่อขนาดตัวอักษรเฉพาะ Spotlight เพื่อประหยัดพื้นที่แนวตั้ง */
+			#spotlight-name     { font-size: 18px !important; line-height: 1.3 !important; }
+			#spotlight-position { font-size: 13px !important; }
+			#spotlight-details  { font-size: 12px !important; padding-top: 0.5rem !important; }
+			#spotlight-type     { font-size: 11px !important; padding: 0.25rem 0.85rem !important; }
+		}
+
+		/* ============================================================
+		   📌 ปรับความสมดุล Spotlight บนหน้าจอแล็ปท็อป (เช่น 1366x768)
+		   ============================================================ */
+		@media (min-width: 1024px) and (max-height: 820px) {
+			/* 1. จัดตำแหน่งการตรึง (Sticky) ให้ทิ้งระยะจากขอบบนอย่างเหมาะสม */
+			.spotlight-3d-wrapper {
+				top: 1.25rem !important;
+			}
+
+			/* 2. ขยายความสูงรูปถ่ายให้ใหญ่ขึ้น เด่นพอดีกับสายตา (ขยายจาก 210px เป็น 290px) */
+			.spotlight-layer-portrait > div {
+				height: 250px !important;
+				width: 100% !important;
+			}
+
+			/* 3. ดึงรูปถ่ายซ้อนทับลงบนการ์ดกระจกมากขึ้น เพื่อให้ดูเป็นองค์ประกอบเดียวกัน */
+			.spotlight-layer-portrait {
+				margin-bottom: -2.5rem !important; /* ดึงรูปทับการ์ดลงมา */
+			}
+
+			/* 4. ปรับความกว้างการ์ดกระจกให้ได้สัดส่วนทรงสวยงาม (350px) ไม่แคบหรือกว้างเกินไป */
+			#spotlight-glass-box {
+				max-width: 350px !important;
+				margin-left: auto !important;
+				margin-right: auto !important;
+			}
+
+			/* 5. คืนความโปร่ง ระยะห่าง และขนาดตัวอักษรให้ดูสบายตา ไม่เบียดแน่น */
+			#spotlight-glass-box > div:last-child {
+				padding-top: 1.25rem !important;
+				padding-bottom: 1.5rem !important;
+				padding-left: 1.5rem !important;
+				padding-right: 1.5rem !important;
+			}
+
+			#spotlight-name     { font-size: 20px !important; line-height: 1.35 !important; }
+			#spotlight-position { font-size: 13.5px !important; }
+			#spotlight-details  { font-size: 12.5px !important; padding-top: 0.65rem !important; }
+			#spotlight-type     { font-size: 12px !important; }
+
+			/* 6. ปรับขนาดรัศมีแสงออร่า (Glow Effect) ให้ฟุ้งครอบคลุมรูปถ่ายพอดี */
+			#spotlight-bg-glow {
+				width: 230px !important;
+				height: 230px !important;
+				top: 0.5rem !important;
 			}
 		}
-	
+
+		/* 📱 CSS สั่งย่อขนาดองค์ประกอบทั้งหมดเมื่อเปิดบนหน้าจอที่มีความสูงเตี้ย (เช่น 1366x768 หรือใน iframe) */
+		@media (min-width: 1024px) and (max-height: 820px) {
+
+			/* 1. ย่อส่วนหัวเรื่อง และช่องค้นหา */
+			main {
+				padding-top: 0.5rem !important;
+				row-gap: 0.75rem !important;
+			}
+			.title-header {
+				font-size: 1.35rem !important; /* ย่อหัวข้อหลัก */
+				padding-bottom: 0 !important;
+			}
+			#search-box input {
+				padding-top: 0.25rem !important;
+				padding-bottom: 0.25rem !important;
+				font-size: 0.75rem !important;
+			}
+			.filter-btn {
+				padding: 0.2rem 0.6rem !important;
+				font-size: 0.7rem !important;
+			}
+
+			/* 2. ย่อการ์ด ผอ. ตรงกลาง */
+			#item-director {
+				margin-bottom: 0.25rem !important;
+			}
+			#avatar-director {
+				width: 70px !important;
+				height: 70px !important;
+			}
+			#item-director h2 { font-size: 17px !important; }
+			#item-director p  { font-size: 12px !important; }
+
+			/* 3. ย่อกล่องกลุ่มงานฝั่งซ้าย */
+			.glass-card-light .p-4, 
+			.glass-card-light .p-3.5 {
+				padding: 0.5rem 0.65rem !important;
+			}
+			.person-item {
+				padding: 0.25rem 0.4rem !important;
+			}
+			.person-item img.w-12 { width: 45px !important; height: 45px !important; }
+			.person-item img.w-10 { width: 38px !important; height: 38px !important; }
+			.person-item img.w-9  { width: 32px !important; height: 32px !important; }
+
+			/* 4. ย่อการ์ด Spotlight ฝั่งขวาให้กระทัดรัด พอดีขอบจอเตี้ย */
+			.spotlight-3d-wrapper {
+				top: 0.5rem !important;
+			}
+			.spotlight-layer-portrait > div {
+				height: 200px !important; /* ย่อรูปไดคัทลง เพื่อไม่ให้ดันกล่องข้อความตกขอบล่าง */
+			}
+			.spotlight-layer-portrait {
+				margin-bottom: -2.2rem !important;
+			}
+			#spotlight-glass-box {
+				max-width: 300px !important; /* บีบความกว้างการ์ดลงเล็กน้อย */
+				margin: auto;
+			}
+			#spotlight-glass-box > div:last-child {
+				padding: 0.85rem 1rem !important; /* ย่อระยะห่างในกล่องข้อความ */
+			}
+			#spotlight-name {
+				font-size: 16px !important;
+			}
+			#spotlight-position {
+				font-size: 11.5px !important;
+			}
+			#spotlight-details {
+				font-size: 11px !important;
+				padding-top: 0.4rem !important;
+			}
+		}
+
+		
 		
     </style>
 </head>
@@ -1130,46 +1287,5 @@
             render();
         })();
     </script>
-	
-<script>
-  /* 📐 ย่อสเกลทุกอย่างลงด้วย CSS transform: scale() เมื่อเปิดบนจอเล็ก/จอเตี้ย */
-  (function() {
-    function scalePageForSmallScreen() {
-      // ดึงความสูงและความกว้างหน้าจอจริงของเครื่องผู้ใช้ (ทะลุผ่าน iframe ได้)
-      var screenHeight = window.screen.height;
-      var screenWidth = window.screen.width;
-      var mainContainer = document.querySelector('main'); // ดึงส่วนเนื้อหาหลักทั้งหมด
-
-      if (!mainContainer) return;
-
-      // ถ้าเป็นหน้าจอเตี้ย หรือแล็ปท็อป (ความสูงจอไม่เกิน 820px หรือความกว้างไม่เกิน 1400px)
-      if (screenHeight <= 820 || screenWidth <= 1400) {
-        var scaleRatio = 0.82; // สเกลย่อลงเหลือ 82% (ปรับตัวเลขตามต้องการได้ เช่น 0.80 หรือ 0.85)
-
-        mainContainer.style.transform = "scale(" + scaleRatio + ")";
-        mainContainer.style.transformOrigin = "top center"; // ยึดจุดหมุนไว้ที่ตรงกลางด้านบน
-        mainContainer.style.width = (100 / scaleRatio) + "%"; // ขยายความกว้างชดเชยไม่ให้ติดขอบข้าง
-        mainContainer.style.marginLeft = -((100 / scaleRatio - 100) / 2) + "%"; // จัดกึ่งกลางชดเชย
-      } else {
-        // จอคอมพิวเตอร์ขนาดใหญ่ แสดงผลสเกล 100% ตามปกติ
-        mainContainer.style.transform = "none";
-        mainContainer.style.width = "100%";
-        mainContainer.style.marginLeft = "0";
-      }
-    }
-
-    // สั่งทำงานทันทีที่โหลดหน้าเว็บเสร็จ
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', scalePageForSmallScreen);
-    } else {
-      scalePageForSmallScreen();
-    }
-
-    // สั่งคำนวณใหม่เมื่อมีการปรับขนาดหน้าจอ
-    window.addEventListener('resize', scalePageForSmallScreen);
-  })();
-</script>	
-	
-	
 </body>
 </html>
