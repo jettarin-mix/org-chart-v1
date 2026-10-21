@@ -42,15 +42,16 @@
             --dot-color: rgba(2, 132, 199, 0.20);
         }
 
-        /* 📌 เปิดระบบ Scroll ภายใน iframe เพื่อให้ Sticky Spotlight ทำงานได้ 100% */
+        /* 📌 1. เปิดระบบ Scroll ภายใน iframe + ล็อกไม่ให้การสโครลทะลุไปหน้าเว็บหลัก (overscroll-behavior: contain) */
         html, body {
             overflow-x: hidden;
             overflow-y: auto;
             min-height: 100vh;
             scroll-behavior: smooth;
+            overscroll-behavior: contain; /* ป้องกัน Scroll ทะลุไปหน้าหลักเมื่อสโครลสุดขอบ */
         }
 
-        /* 🎨 Custom Scrollbar สไตล์โมเดิร์นเข้ากับธีมองค์กร */
+        /* 🎨 Custom Scrollbar ธีมองค์กร */
         ::-webkit-scrollbar {
             width: 7px;
         }
@@ -91,8 +92,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
-            padding-bottom: 0.35rem;
-            line-height: 1.35;
+            line-height: 1.3;
             transition: all 0.3s ease;
         }
         .title-header:hover {
@@ -207,9 +207,9 @@
         .person-item p.text-[11px] { font-size: 11px !important; }
         .person-item p.text-[9px]  { font-size: 9px !important; }
 
-        #spotlight-name     { font-size: 26px !important; }
-        #spotlight-position { font-size: 15px !important; }
-        #spotlight-details  { font-size: 13px !important; }
+        #spotlight-name     { font-size: 25px !important; }
+        #spotlight-position { font-size: 14px !important; }
+        #spotlight-details  { font-size: 12.5px !important; }
         #spotlight-type     { font-size: 12px !important; }
 
         /* ============================================================
@@ -253,12 +253,12 @@
         #spotlight-bg-glow {
             filter: blur(100px) !important;
             opacity: 0.8 !important;
-            width: 280px !important;
-            height: 280px !important;
+            width: 260px !important;
+            height: 260px !important;
         }
 
         /* ============================================================
-           📌 ขยายคอนเทนเนอร์ + ปรับสเกล Spotlight ตามความสูงจอ
+           📌 ปรับการขยายพื้นที่คอนเทนเนอร์ & การปรับสเกลตามความสูงหน้าจอ
            ============================================================ */
         @media (min-width: 1280px) {
             main.max-w-7xl {
@@ -266,56 +266,48 @@
             }
         }
 
-        /* จอสูง 920px ขึ้นไป (1080p+) */
+        /* จอสูงใหญ่ (920px ขึ้นไป) */
         @media (min-height: 920px) and (min-width: 1024px) {
             .spotlight-layer-portrait > div {
-                height: 440px !important;
-                width: 330px !important;
+                height: 420px !important;
+                width: 320px !important;
             }
             #spotlight-bg-glow {
-                width: 320px !important;
-                height: 320px !important;
+                width: 300px !important;
+                height: 300px !important;
             }
             #spotlight-name {
                 font-size: 28px !important;
             }
         }
 
-        /* จอความสูงต่ำ (1366x768 / Laptop): ย่อ Spotlight เพื่อให้แสดงครบถ้วนขณะตรึง Sticky */
+        /* จอความสูงต่ำ/โน้ตบุ๊ก (1366x768 / iframe) */
         @media (max-height: 820px) and (min-width: 1024px) {
-            header {
-                padding-top: 1rem !important;
-                padding-bottom: 0.5rem !important;
-            }
-            header h1 {
-                font-size: 1.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
             .spotlight-3d-wrapper {
-                top: 0.5rem !important;
+                top: 0.25rem !important;
             }
             .spotlight-layer-portrait > div {
-                height: 250px !important;
-                width: 230px !important;
+                height: 240px !important;
+                width: 220px !important;
             }
             #spotlight-bg-glow {
-                width: 200px !important;
-                height: 200px !important;
+                width: 190px !important;
+                height: 190px !important;
             }
             #spotlight-glass-box > div:nth-child(2) {
-                padding-top: 0.6rem !important;
-                padding-bottom: 1rem !important;
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.85rem !important;
+                padding-left: 0.85rem !important;
+                padding-right: 0.85rem !important;
             }
             #spotlight-name {
-                font-size: 19px !important;
+                font-size: 18px !important;
             }
             #spotlight-position {
-                font-size: 13px !important;
+                font-size: 12.5px !important;
             }
             #spotlight-details {
-                font-size: 11.5px !important;
+                font-size: 11px !important;
             }
         }
 
@@ -327,7 +319,7 @@
         }
     </style>
 </head>
-<body class="text-slate-800 relative min-h-screen pb-12">
+<body class="text-slate-800 relative min-h-screen pt-2 pb-8 px-2 sm:px-4">
 
     <!-- HTML5 Canvas Background -->
     <canvas id="bg-canvas"></canvas>
@@ -338,37 +330,34 @@
         <span id="toast-message">คัดลอกข้อมูลเรียบร้อยแล้ว</span>
     </div>
 
-    <!-- Header Section -->
-    <header class="pt-8 pb-4 text-center px-4 relative z-10">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl title-header tracking-tight mb-2 cursor-default">
-            โครงสร้างบุคลากรกองเทคโนโลยีดิจิทัล
-        </h1>
+    <!-- MAIN CONTAINER (Grid 7 : 5) -->
+    <main class="max-w-7xl mx-auto relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-8 items-start">
 
-        <!-- Quick Search Bar -->
-        <div id="search-box" class="max-w-xs sm:max-w-sm mx-auto relative mt-2">
-          <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-center pointer-events-none text-slate-400">
-            <div class="flex items-center justify-center w-full max-w-[170px] sm:max-w-[190px] pr-28">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-            </div>
-          </div>
+            <!-- ============================================================ -->
+            <!-- 📌 ฝั่งซ้าย (7/12): หัวข้อเว็บ + ค้นหา + ผังองค์กร (BENTO GRID) -->
+            <!-- ============================================================ -->
+            <div class="lg:col-span-7 xl:col-span-7 space-y-4">
 
-          <input type="text" 
-                 oninput="searchPersonnel(this.value)" 
-                 placeholder="ค้นหาชื่อ หรือ นามสกุล..." 
-                 class="w-full px-4 py-2 text-center text-xs sm:text-sm rounded-full bg-white/80 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white shadow-sm backdrop-blur-md transition">
-        </div>
-    </header>
+                <!-- 📌 ส่วนหัวของหน้าเว็บ (ขยับมาอยู่ชิดขอบบนฝั่งซ้าย) -->
+                <header class="text-center sm:text-left pt-1 pb-1">
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl title-header tracking-tight mb-2 cursor-default">
+                        โครงสร้างบุคลากรกองเทคโนโลยีดิจิทัล
+                    </h1>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-2">
-        <!-- Grid 7 : 5 จัดความสมดุลด้านซ้ายและขวา -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
-
-            <!-- ========================================== -->
-            <!-- ฝั่งซ้าย (7/12): โครงสร้างองค์กร (BENTO GRID) -->
-            <!-- ========================================== -->
-            <div class="lg:col-span-7 xl:col-span-7 space-y-6">
+                    <!-- Quick Search Bar -->
+                    <div id="search-box" class="max-w-full sm:max-w-md relative mt-1.5">
+                        <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" 
+                               oninput="searchPersonnel(this.value)" 
+                               placeholder="ค้นหาชื่อ หรือ นามสกุล..." 
+                               class="w-full pl-9 pr-4 py-1.5 text-xs sm:text-sm rounded-full bg-white/80 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white shadow-sm backdrop-blur-md transition">
+                    </div>
+                </header>
 
                 <!-- 1. การ์ด ผอ. -->
                 <section>
@@ -378,9 +367,9 @@
                          onclick="selectPerson('director')" 
                          class="person-item active-gov glass-card-light rounded-2xl overflow-hidden cursor-pointer transition-all border border-slate-200/80 shadow-sm">
                         
-                        <div class="w-full h-3 bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] rounded-t-2xl"></div>
+                        <div class="w-full h-2.5 bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] rounded-t-2xl"></div>
 
-                        <div class="p-5 flex flex-col sm:flex-row items-center gap-5">
+                        <div class="p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
                             <div class="relative shrink-0">
                                 <img id="avatar-director" 
                                      src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026101916312653088.png" 
@@ -393,7 +382,7 @@
                                 <h2 class="text-xl font-bold text-slate-900 truncate">ภก. ดร.เกียรติศักดิ์ แซ่อิว</h2>
                                 <p class="text-sm text-sky-700 font-medium mt-0.5">รักษาราชการแทนผู้อำนวยการกองเทคโนโลยีดิจิทัล</p>
                                 
-                                <div class="mt-2.5 pt-2 border-t border-slate-200/60 flex flex-wrap justify-center sm:justify-start gap-y-1 gap-x-4 text-xs text-slate-500">
+                                <div class="mt-2 pt-2 border-t border-slate-200/60 flex flex-wrap justify-center sm:justify-start gap-y-1 gap-x-4 text-xs text-slate-500">
                                     <span onclick="event.stopPropagation(); copyToClipboard('kiattisak.s@pi.ac.th', 'คัดลอกอีเมลเรียบร้อยแล้ว')" class="flex items-center gap-1 hover:text-sky-600 transition cursor-pointer" title="คลิกเพื่อคัดลอก">
                                         <svg class="w-4 h-4 text-sky-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
@@ -417,13 +406,13 @@
                     <!-- กลุ่มที่ 1 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
+                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2 px-3 text-sm tracking-wide shadow-sm">
                                 งานภารกิจอำนวยการ
                             </div>
 
-                            <div class="p-4 space-y-3">
+                            <div class="p-3.5 space-y-3">
                                 <div>
-                                    <p class="text-[11px] font-semibold text-sky-700 mb-1.5">หัวหน้างาน</p>
+                                    <p class="text-[11px] font-semibold text-sky-700 mb-1">หัวหน้างาน</p>
                                     <div id="item-ubonrat" data-type="gov-emp" data-name="อุบลรัตน์ เทศนาบูรณ์" onclick="selectPerson('ubonrat')" 
                                          class="person-item p-2 rounded-xl bg-white/80 border border-slate-200/80 hover:bg-sky-50/50 cursor-pointer flex items-center gap-3 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026101917421451364.png" onerror="handleAvatarError(this, 'อ')"
@@ -438,7 +427,7 @@
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
                                     
-                                    <div id="item-anuchit" data-type="gov-emp" data-name="อนุชิต ดาศรี" onclick="selectPerson('anuchit')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-sky-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-anuchit" data-type="gov-emp" data-name="อนุชิต ดาศรี" onclick="selectPerson('anuchit')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-sky-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102111212249308.png" onerror="handleAvatarError(this, 'อ')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-gov-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นายอนุชิต ดาศรี</p>
@@ -446,7 +435,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="item-duangkamol" data-type="inst-emp" data-name="ดวงกมล รัตนวรรณ" onclick="selectPerson('duangkamol')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-sky-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-duangkamol" data-type="inst-emp" data-name="ดวงกมล รัตนวรรณ" onclick="selectPerson('duangkamol')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-sky-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102109203552408.png" onerror="handleAvatarError(this, 'ด')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นางสาวดวงกมล รัตนวรรณ</p>
@@ -454,7 +443,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="item-apiwat" data-type="inst-emp" data-name="อภิวัฒน์ ต๊ะติ๊บ" onclick="selectPerson('apiwat')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-sky-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-apiwat" data-type="inst-emp" data-name="อภิวัฒน์ ต๊ะติ๊บ" onclick="selectPerson('apiwat')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-sky-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102109384170996.png" onerror="handleAvatarError(this, 'อ')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นายอภิวัฒน์ ต๊ะติ๊บ</p>
@@ -465,9 +454,9 @@
                             </div>
                         </div>
 
-                        <div class="p-4 pt-0">
-                            <div class="pt-2.5 border-t border-dashed border-slate-300">
-                                <p class="text-[11px] font-semibold text-amber-700 mb-1.5">ช่วยปฏิบัติงาน</p>
+                        <div class="p-3.5 pt-0">
+                            <div class="pt-2 border-t border-dashed border-slate-300">
+                                <p class="text-[11px] font-semibold text-amber-700 mb-1">ช่วยปฏิบัติงาน</p>
                                 <div id="item-panisa" data-type="gov" data-name="ปาณิศา คำชัยยะ" onclick="selectPerson('panisa')" class="person-item p-1.5 rounded-lg bg-white/40 hover:bg-amber-50/60 cursor-pointer flex items-center gap-2.5 transition">
                                     <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102111102270627.png" onerror="handleAvatarError(this, 'ป')" class="w-9 h-9 rounded-full object-cover object-[center_12%] border-2 ring-gov shrink-0">
                                     <div class="min-w-0">
@@ -482,13 +471,13 @@
                     <!-- กลุ่มที่ 2 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
+                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2 px-3 text-sm tracking-wide shadow-sm">
                                 งานเทคโนโลยีระบบสารสนเทศ
                             </div>
 
-                            <div class="p-4 space-y-3">
+                            <div class="p-3.5 space-y-3">
                                 <div>
-                                    <p class="text-[11px] font-semibold text-cyan-700 mb-1.5">หัวหน้างาน</p>
+                                    <p class="text-[11px] font-semibold text-cyan-700 mb-1">หัวหน้างาน</p>
                                     <div id="item-thacha" data-type="gov-emp" data-name="ธชา ศรีนวลขาว" onclick="selectPerson('thacha')" class="person-item p-2 rounded-xl bg-white/80 border border-slate-200/80 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-3 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026101917392449055.png" onerror="handleAvatarError(this, 'ธ')" class="w-12 h-12 rounded-full object-cover object-[center_12%] border-2 ring-gov-emp shrink-0 shadow-sm">
                                         <div class="min-w-0">
@@ -501,7 +490,7 @@
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
                                     
-                                    <div id="item-natsamit" data-type="gov" data-name="ณัชสมิตถ์ โตปุณณาพัฒน์" onclick="selectPerson('natsamit')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-natsamit" data-type="gov" data-name="ณัชสมิตถ์ โตปุณณาพัฒน์" onclick="selectPerson('natsamit')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102111025410099.png" onerror="handleAvatarError(this, 'ณ')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-gov shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นายณัชสมิตถ์ โตปุณณาพัฒน์</p>
@@ -509,7 +498,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="item-nattakarn" data-type="inst-emp" data-name="นัฐกานต์ เคหาวิตร" onclick="selectPerson('nattakarn')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-nattakarn" data-type="inst-emp" data-name="นัฐกานต์ เคหาวิตร" onclick="selectPerson('nattakarn')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102109420298468.png" onerror="handleAvatarError(this, 'น')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นายนัฐกานต์ เคหาวิตร</p>
@@ -517,7 +506,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="item-pichayada" data-type="inst-emp" data-name="พิชญาดา กฤตเวทิน" onclick="selectPerson('pichayada')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-pichayada" data-type="inst-emp" data-name="พิชญาดา กฤตเวทิน" onclick="selectPerson('pichayada')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102109510257719.png" onerror="handleAvatarError(this, 'พ')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นางสาวพิชญาดา กฤตเวทิน</p>
@@ -528,9 +517,9 @@
                             </div>
                         </div>
 
-                        <div class="p-4 pt-0">
-                            <div class="pt-2.5 border-t border-dashed border-slate-300">
-                                <p class="text-[11px] font-semibold text-amber-700 mb-1.5">ช่วยปฏิบัติงาน</p>
+                        <div class="p-3.5 pt-0">
+                            <div class="pt-2 border-t border-dashed border-slate-300">
+                                <p class="text-[11px] font-semibold text-amber-700 mb-1">ช่วยปฏิบัติงาน</p>
                                 <div id="item-jettarin" data-type="inst-emp" data-name="เจตรินทร์ ทัดปากน้ำ" onclick="selectPerson('jettarin')" class="person-item p-1.5 rounded-lg bg-white/40 hover:bg-amber-50/60 cursor-pointer flex items-center gap-2.5 transition">
                                     <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102109592120658.png" onerror="handleAvatarError(this, 'จ')" class="w-9 h-9 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                     <div class="min-w-0">
@@ -545,13 +534,13 @@
                     <!-- กลุ่มที่ 3 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
+                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2 px-3 text-sm tracking-wide shadow-sm">
                                 งานเทคโนโลยีระบบคอมพิวเตอร์และเครือข่าย
                             </div>
 
-                            <div class="p-4 space-y-3">
+                            <div class="p-3.5 space-y-3">
                                 <div>
-                                    <p class="text-[11px] font-semibold text-purple-700 mb-1.5">หัวหน้างาน</p>
+                                    <p class="text-[11px] font-semibold text-purple-700 mb-1">หัวหน้างาน</p>
                                     <div id="item-yuttachai" data-type="gov-emp" data-name="ยุทธชัย สุนทรวิภาต" onclick="selectPerson('yuttachai')" class="person-item p-2 rounded-xl bg-white/80 border border-slate-200/80 hover:bg-purple-50/50 cursor-pointer flex items-center gap-3 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102110091347091.png" onerror="handleAvatarError(this, 'ย')" class="w-12 h-12 rounded-full object-cover object-[center_12%] border-2 ring-gov-emp shrink-0 shadow-sm">
                                         <div class="min-w-0">
@@ -564,7 +553,7 @@
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
                                     
-                                    <div id="item-peerawat" data-type="inst-emp" data-name="พีรวัส สุทัตโต" onclick="selectPerson('peerawat')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-purple-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-peerawat" data-type="inst-emp" data-name="พีรวัส สุทัตโต" onclick="selectPerson('peerawat')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-purple-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102110463375251.png" onerror="handleAvatarError(this, 'พ')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นายพีรวัส สุทัตโต</p>
@@ -575,8 +564,8 @@
                             </div>
                         </div>
 
-                        <div class="p-4 pt-0">
-                            <div class="pt-2.5 border-t border-dashed border-slate-300 space-y-1.5">
+                        <div class="p-3.5 pt-0">
+                            <div class="pt-2 border-t border-dashed border-slate-300 space-y-1.5">
                                 <p class="text-[11px] font-semibold text-amber-700 mb-1">ช่วยปฏิบัติงาน</p>
                                 
                                 <div id="item-anuchit-2" data-type="gov-emp" data-name="อนุชิต ดาศรี" onclick="selectPerson('anuchit')" class="person-item p-1.5 rounded-lg bg-white/40 hover:bg-amber-50/60 cursor-pointer flex items-center gap-2.5 transition">
@@ -607,13 +596,13 @@
                     <!-- กลุ่มที่ 4 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
+                            <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2 px-3 text-sm tracking-wide shadow-sm">
                                 งานวิทยบริการและนวัตกรรม
                             </div>
 
-                            <div class="p-4 space-y-3">
+                            <div class="p-3.5 space-y-3">
                                 <div>
-                                    <p class="text-[11px] font-semibold text-pink-700 mb-1.5">หัวหน้างาน</p>
+                                    <p class="text-[11px] font-semibold text-pink-700 mb-1">หัวหน้างาน</p>
                                     <div id="item-namfon" data-type="gov" data-name="น้ำฝน เอี่ยมวิริยาวัฒน์" onclick="selectPerson('namfon')" class="person-item p-2 rounded-xl bg-white/80 border border-slate-200/80 hover:bg-pink-50/50 cursor-pointer flex items-center gap-3 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102110190149832.png" onerror="handleAvatarError(this, 'น')" class="w-12 h-12 rounded-full object-cover object-[center_12%] border-2 ring-gov shrink-0 shadow-sm">
                                         <div class="min-w-0">
@@ -626,7 +615,7 @@
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
 
-                                    <div id="item-panisa-2" data-type="gov" data-name="ปาณิศา คำชัยยะ" onclick="selectPerson('panisa')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-pink-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-panisa-2" data-type="gov" data-name="ปาณิศา คำชัยยะ" onclick="selectPerson('panisa')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-pink-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102111102270627.png" onerror="handleAvatarError(this, 'ป')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-gov shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นางสาวปาณิศา คำชัยยะ</p>
@@ -634,7 +623,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="item-jettarin-3" data-type="inst-emp" data-name="เจตรินทร์ ทัดปากน้ำ" onclick="selectPerson('jettarin')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-pink-50/50 cursor-pointer flex items-center gap-2.5 transition">
+                                    <div id="item-jettarin-3" data-type="inst-emp" data-name="เจตรินทร์ ทัดปากน้ำ" onclick="selectPerson('jettarin')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-pink-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102109592120658.png" onerror="handleAvatarError(this, 'จ')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นายเจตรินทร์ ทัดปากน้ำ</p>
@@ -642,7 +631,8 @@
                                         </div>
                                     </div>
 
-                                    <div id="item-kasidech" data-type="inst-emp" data-name="กษิเดช เศรษฐวนิช" onclick="selectPerson('kasidech')" class="person-item p-2 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-pink-50/50 cursor-pointer flex items-center gap-2.5 transition">
+
+                                    <div id="item-kasidech" data-type="inst-emp" data-name="กษิเดช เศรษฐวนิช" onclick="selectPerson('kasidech')" class="person-item p-1.5 rounded-lg bg-white/60 border border-slate-200/60 hover:bg-pink-50/50 cursor-pointer flex items-center gap-2.5 transition">
                                         <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102110510330476.png" onerror="handleAvatarError(this, 'ก')" class="w-10 h-10 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                         <div class="min-w-0">
                                             <p class="text-xs font-medium text-slate-800 truncate">นายกษิเดช เศรษฐวนิช</p>
@@ -653,9 +643,9 @@
                             </div>
                         </div>
 
-                        <div class="p-4 pt-0">
-                            <div class="pt-2.5 border-t border-dashed border-slate-300">
-                                <p class="text-[11px] font-semibold text-amber-700 mb-1.5">ช่วยปฏิบัติงาน</p>
+                        <div class="p-3.5 pt-0">
+                            <div class="pt-2 border-t border-dashed border-slate-300">
+                                <p class="text-[11px] font-semibold text-amber-700 mb-1">ช่วยปฏิบัติงาน</p>
                                 <div id="item-ubonrat-2" data-type="gov-emp" data-name="อุบลรัตน์ เทศนาบูรณ์" onclick="selectPerson('ubonrat')" class="person-item p-1.5 rounded-lg bg-white/40 hover:bg-amber-50/60 cursor-pointer flex items-center gap-2.5 transition">
                                     <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026101917331418627.png" onerror="handleAvatarError(this, 'อ')" class="w-9 h-9 rounded-full object-cover object-[center_12%] border-2 ring-gov-emp shrink-0">
                                     <div class="min-w-0">
@@ -669,7 +659,7 @@
                 </section>
 
                 <!-- Legend หมายเหตุประเภทบุคลากร -->
-                <footer class="p-3.5 rounded-xl bg-white/80 border border-slate-200/80 text-xs text-slate-600 flex flex-wrap items-center justify-center gap-4 sm:gap-6 shadow-sm">
+                <footer class="p-3 rounded-xl bg-white/80 border border-slate-200/80 text-xs text-slate-600 flex flex-wrap items-center justify-center gap-3 sm:gap-5 shadow-sm">
                     <span class="font-semibold text-slate-700">ประเภทบุคลากร:</span>
                     
                     <span onmouseenter="highlightType('gov')" onmouseleave="clearHighlight()" 
@@ -691,18 +681,18 @@
             </div>
 
 
-            <!-- ========================================== -->
-            <!-- ฝั่งขวา (5/12): SPOTLIGHT SHOWCASE (STICKY) -->
-            <!-- ========================================== -->
-            <div class="lg:col-span-5 xl:col-span-5 sticky top-4 sm:top-6 spotlight-3d-wrapper">
+            <!-- ============================================================ -->
+            <!-- 📌 ฝั่งขวา (5/12): SPOTLIGHT SHOWCASE (ขยับขึ้นมาตั้งต้นขนานขอบบนสุด) -->
+            <!-- ============================================================ -->
+            <div class="lg:col-span-5 xl:col-span-5 sticky top-2 spotlight-3d-wrapper">
                 <div id="spotlight-card" class="spotlight-3d-card relative flex flex-col items-center">
 
                     <!-- LAYER 0: แสงออร่า -->
-                    <div id="spotlight-bg-glow" class="glow-gov absolute top-4 left-1/2 -translate-x-1/2 rounded-full pointer-events-none z-0 transition-all duration-300"></div>
+                    <div id="spotlight-bg-glow" class="glow-gov absolute top-2 left-1/2 -translate-x-1/2 rounded-full pointer-events-none z-0 transition-all duration-300"></div>
 
                     <!-- LAYER 1: รูปบุคคลไดคัท -->
                     <div class="spotlight-layer-portrait relative z-10 flex justify-center -mb-5 w-full">
-                        <div class="relative w-72 h-96 sm:w-80 sm:h-[390px] flex items-end justify-center transition-all duration-300">
+                        <div class="relative w-72 h-96 sm:w-80 sm:h-[380px] flex items-end justify-center transition-all duration-300">
                             <img id="spotlight-img" 
                                  src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026101916312653088.png" 
                                  onerror="handleAvatarError(this, 'ก')"
@@ -714,24 +704,24 @@
                     <!-- LAYER 2: แผ่นการ์ดกระจกหน้า -->
                     <div id="spotlight-glass-box" class="spotlight-layer-card relative z-20 w-full glass-card-light rounded-3xl overflow-hidden bg-white/95 backdrop-blur-md border border-slate-200/80 shadow-2xl">
                         
-                        <div class="w-full h-3 bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] rounded-t-3xl"></div>
+                        <div class="w-full h-2.5 bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] rounded-t-3xl"></div>
 
-                        <div class="pt-5 pb-8 px-8 text-center space-y-4">
+                        <div class="pt-4 pb-6 px-6 text-center space-y-3">
                             
                             <!-- ชื่อ - ตำแหน่ง -->
-                            <div class="space-y-1">
+                            <div class="space-y-0.5">
                                 <h2 id="spotlight-name" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
                                     ภก. ดร.เกียรติศักดิ์ แซ่อิว
                                 </h2>
-                                <p id="spotlight-position" class="text-sm sm:text-base text-sky-700 font-medium">
+                                <p id="spotlight-position" class="text-xs sm:text-sm text-sky-700 font-medium">
                                     รักษาราชการแทนผู้อำนวยการกองเทคโนโลยีดิจิทัล
                                 </p>
                             </div>
 
                             <!-- รายละเอียดกลุ่มงาน & ช่องทางติดต่อ -->
-                            <div id="spotlight-details" class="pt-3 border-t border-slate-200/80 text-xs sm:text-sm text-slate-700 space-y-2.5">
+                            <div id="spotlight-details" class="pt-2.5 border-t border-slate-200/80 text-xs text-slate-700 space-y-2">
                                 
-                                <div id="spotlight-contact-section" class="space-y-2">
+                                <div id="spotlight-contact-section" class="space-y-1.5">
                                     <div onclick="copyToClipboard('kiattisak.s@pi.ac.th', 'คัดลอกอีเมลเรียบร้อยแล้ว')" class="flex items-center justify-center gap-2 hover:text-sky-600 transition cursor-pointer" title="คลิกเพื่อคัดลอก">
                                         <svg class="w-4 h-4 text-sky-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
@@ -745,7 +735,7 @@
                                     </div>
                                 </div>
 
-                                <div id="spotlight-group-section" class="space-y-1.5 hidden text-center">
+                                <div id="spotlight-group-section" class="space-y-1 hidden text-center">
                                     <p class="text-slate-600">
                                         <span class="font-semibold text-sky-800">กลุ่มงาน:</span> 
                                         <span id="spotlight-main-group" class="font-medium text-slate-900"></span>
@@ -758,8 +748,8 @@
 
                             </div>
 
-                            <div class="pt-2">
-                                <span id="spotlight-type" class="inline-block px-5 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-sky-100 text-sky-800 border border-sky-300 shadow-sm">
+                            <div class="pt-1">
+                                <span id="spotlight-type" class="inline-block px-4 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-800 border border-sky-300 shadow-sm">
                                     ข้าราชการ
                                 </span>
                             </div>
@@ -774,7 +764,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-16 text-center text-xs text-slate-400 relative z-10">
+    <footer class="mt-8 text-center text-xs text-slate-400 relative z-10">
         <p>© กองเทคโนโลยีดิจิทัล สถาบันพระบรมราชชนก</p>
     </footer>
 
@@ -970,10 +960,10 @@
                 
                 const typeEl = document.getElementById('spotlight-type');
                 typeEl.textContent = person.type;
-                typeEl.className = `inline-block px-5 py-1.5 rounded-full text-xs sm:text-sm font-semibold border shadow-sm ${person.typeClass}`;
+                typeEl.className = `inline-block px-4 py-1 rounded-full text-xs font-semibold border shadow-sm ${person.typeClass}`;
 
                 const bgGlowEl = document.getElementById('spotlight-bg-glow');
-                bgGlowEl.className = `absolute top-4 left-1/2 -translate-x-1/2 rounded-full pointer-events-none z-0 transition-all duration-300 ${person.glowClass}`;
+                bgGlowEl.className = `absolute top-2 left-1/2 -translate-x-1/2 rounded-full pointer-events-none z-0 transition-all duration-300 ${person.glowClass}`;
 
                 const contactSection = document.getElementById('spotlight-contact-section');
                 const groupSection = document.getElementById('spotlight-group-section');
@@ -1079,7 +1069,7 @@
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                const y = e.clientY - card.top;
 
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
