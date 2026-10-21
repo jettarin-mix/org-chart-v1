@@ -1130,5 +1130,45 @@
             render();
         })();
     </script>
+	
+	<script>
+	  /* 🔍 สคริปต์ตรวจจับขนาดหน้าจอจริงของเครื่อง (ทะลุผ่าน iframe) เพื่อ Zoom Out อัตโนมัติ */
+	  (function() {
+		function autoScaleForSmallScreen() {
+		  // window.screen.height คือความสูงหน้าจอจริงของเครื่องผู้ใช้ (จอ 1366x768 จะได้ค่า 768)
+		  var realScreenHeight = window.screen.height;
+		  var realScreenWidth = window.screen.width;
+
+		  // ถ้าเป็นจอแล็ปท็อป/จอเตี้ย (ความสูงจอไม่เกิน 820px หรือ ความกว้างไม่เกิน 1400px)
+		  if (realScreenHeight <= 820 || realScreenWidth <= 1400) {
+
+			// สั่ง Zoom Out ลงเหลือ 82%
+			document.body.style.zoom = "82%";
+
+			// สำรองสำหรับเบราว์เซอร์ที่ไม่รองรับ zoom (เช่น Firefox) ให้ใช้ transform แทน
+			if (!('zoom' in document.body.style)) {
+			  document.body.style.transform = "scale(0.82)";
+			  document.body.style.transformOrigin = "top center";
+			  document.body.style.width = "122%"; /* ชดเชยความกว้างที่ถูกหด */
+			}
+		  } else {
+			// จอคอมพิวเตอร์ขนาดใหญ่ ให้แสดงผล 100% ตามปกติ
+			document.body.style.zoom = "100%";
+			document.body.style.transform = "none";
+		  }
+		}
+
+		// ทำงานทันทีเมื่อโหลดหน้าเว็บเสร็จ
+		if (document.readyState === 'loading') {
+		  document.addEventListener('DOMContentLoaded', autoScaleForSmallScreen);
+		} else {
+		  autoScaleForSmallScreen();
+		}
+
+		// ทำงานเมื่อมีการขยับขนาดหน้าจอ
+		window.addEventListener('resize', autoScaleForSmallScreen);
+	  })();
+	</script>	
+	
 </body>
 </html>
