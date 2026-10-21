@@ -42,12 +42,34 @@
             --dot-color: rgba(2, 132, 199, 0.20);
         }
 
+        /* 📌 เปิดระบบ Scroll ภายใน iframe เพื่อให้ Sticky Spotlight ทำงานได้ 100% */
+        html, body {
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        /* 🎨 Custom Scrollbar สไตล์โมเดิร์นเข้ากับธีมองค์กร */
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.8);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(2, 132, 199, 0.35);
+            border-radius: 99px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(2, 132, 199, 0.7);
+        }
+
         body {
             font-family: 'Prompt', sans-serif;
             background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             background-attachment: fixed;
-            min-height: 100vh;
-            overflow-x: hidden;
+            position: relative;
         }
 
         /* Canvas Backdrop for Dot Matrix Warp */
@@ -91,14 +113,14 @@
         /* 🔮 3D Spotlight Container & Layer Management */
         .spotlight-3d-wrapper {
             perspective: 1200px;
-            isolation: isolate; /* ล็อก Stacking Context แก้ปัญหาชั้นสีมั่ว */
+            isolation: isolate;
         }
         .spotlight-3d-card {
-            transform-style: flat; /* ใช้ 2D Stacking เพื่อการควบคุม z-index แบบเบ็ดเสร็จ */
+            transform-style: flat;
             transition: transform 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* ✨ Background Glow behind Photo (ออร่าฟุ้งฉากหลังรูปถ่ายเปลี่ยนตามประเภท) */
+        /* ✨ Background Glow behind Photo */
         .glow-gov {
             background: radial-gradient(circle, rgba(2, 132, 199, 0.50) 0%, rgba(56, 189, 248, 0.20) 50%, transparent 75%);
         }
@@ -110,9 +132,9 @@
         }
 
         /* Ring Colors according to Personnel Type */
-        .ring-gov { border-color: #0284c7 !important; }        /* ข้าราชการ (สีฟ้า) */
-        .ring-gov-emp { border-color: #059669 !important; }    /* พนักงานราชการ (สีเขียว) */
-        .ring-inst-emp { border-color: #7c3aed !important; }   /* พนักงานสถาบัน (สีม่วง) */
+        .ring-gov { border-color: #0284c7 !important; }
+        .ring-gov-emp { border-color: #059669 !important; }
+        .ring-inst-emp { border-color: #7c3aed !important; }
 
         /* Active Selected Card States */
         .person-item.active-gov {
@@ -166,128 +188,143 @@
             transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
+        /* ============================================================
+           📌 ขนาดตัวอักษรแยกตามประเภทกล่อง
+           ============================================================ */
+        #item-director h2   { font-size: 24px !important; }
+        #item-director p    { font-size: 16px !important; }
+        #item-director span { font-size: 14px !important; }
+
+        .glass-card-light .bg-gradient-to-r { font-size: 15px !important; }
+        .glass-card-light .p-4 p.font-semibold { font-size: 14px !important; }
+
+        .person-item:has(.ring-gov-emp, .ring-gov) p.font-semibold { font-size: 13px !important; }
+        .person-item:has(.ring-gov-emp, .ring-gov) p.text-slate-500 { font-size: 11px !important; }
+
+        .person-item p.font-medium.text-slate-800 { font-size: 12px !important; }
+        .person-item p.text-[10px]                { font-size: 10px !important; }
+
+        .person-item p.text-[11px] { font-size: 11px !important; }
+        .person-item p.text-[9px]  { font-size: 9px !important; }
+
+        #spotlight-name     { font-size: 26px !important; }
+        #spotlight-position { font-size: 15px !important; }
+        #spotlight-details  { font-size: 13px !important; }
+        #spotlight-type     { font-size: 12px !important; }
+
+        /* ============================================================
+           📌 ปรับสีตัวอักษรป้ายหัวข้อกลุ่มย่อย
+           ============================================================ */
+        .glass-card-light p.text-sky-700,
+        .glass-card-light p.text-cyan-700,
+        .glass-card-light p.text-purple-700,
+        .glass-card-light p.text-pink-700 {
+            color: #0284c7 !important;
+        }
+        .glass-card-light p.text-slate-500 {
+            color: #003380 !important;
+        }
+        .glass-card-light p.text-amber-700 {
+            color: #475569 !important;
+        }
+
+        /* ============================================================
+           📌 รูปวงกลมบุคลากร + ความหนาเส้นกรอบ
+           ============================================================ */
+        #avatar-director {
+            width: 120px !important;
+            height: 120px !important;
+            border-width: 4px !important;
+        }
+        .person-item img.w-12 {
+            width: 76px !important;
+            height: 76px !important;
+        }
+        .person-item img.w-10 {
+            width: 67px !important;
+            height: 67px !important;
+        }
+        .person-item img.w-9 {
+            width: 55px !important;
+            height: 55px !important;
+        }
+        .person-item img { border-width: 4px !important; }
+
+        #spotlight-bg-glow {
+            filter: blur(100px) !important;
+            opacity: 0.8 !important;
+            width: 280px !important;
+            height: 280px !important;
+        }
+
+        /* ============================================================
+           📌 ขยายคอนเทนเนอร์ + ปรับสเกล Spotlight ตามความสูงจอ
+           ============================================================ */
+        @media (min-width: 1280px) {
+            main.max-w-7xl {
+                max-width: 1380px !important;
+            }
+        }
+
+        /* จอสูง 920px ขึ้นไป (1080p+) */
+        @media (min-height: 920px) and (min-width: 1024px) {
+            .spotlight-layer-portrait > div {
+                height: 440px !important;
+                width: 330px !important;
+            }
+            #spotlight-bg-glow {
+                width: 320px !important;
+                height: 320px !important;
+            }
+            #spotlight-name {
+                font-size: 28px !important;
+            }
+        }
+
+        /* จอความสูงต่ำ (1366x768 / Laptop): ย่อ Spotlight เพื่อให้แสดงครบถ้วนขณะตรึง Sticky */
+        @media (max-height: 820px) and (min-width: 1024px) {
+            header {
+                padding-top: 1rem !important;
+                padding-bottom: 0.5rem !important;
+            }
+            header h1 {
+                font-size: 1.85rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            .spotlight-3d-wrapper {
+                top: 0.5rem !important;
+            }
+            .spotlight-layer-portrait > div {
+                height: 250px !important;
+                width: 230px !important;
+            }
+            #spotlight-bg-glow {
+                width: 200px !important;
+                height: 200px !important;
+            }
+            #spotlight-glass-box > div:nth-child(2) {
+                padding-top: 0.6rem !important;
+                padding-bottom: 1rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            #spotlight-name {
+                font-size: 19px !important;
+            }
+            #spotlight-position {
+                font-size: 13px !important;
+            }
+            #spotlight-details {
+                font-size: 11.5px !important;
+            }
+        }
+
         @media print {
             #bg-canvas, #search-box, #toast, footer { display: none !important; }
             body { background: white !important; color: black !important; }
             .glass-card-light { box-shadow: none !important; border: 1px solid #ccc !important; }
             .sticky { position: relative !important; top: 0 !important; }
         }
-		
-		
-			/* ============================================================
-			   📌 ปรับขนาดตัวอักษรแยกตามกล่อง (แก้ไขขนาดที่นี่ได้เลย)
-			   ============================================================ */
-
-			/* 1. 👑 กล่อง ผอ. (ฝั่งซ้าย) */
-			#item-director h2   { font-size: 24px !important; } /* ชื่อ ผอ. */
-			#item-director p    { font-size: 16px !important; } /* ตำแหน่ง ผอ. */
-			#item-director span { font-size: 14px !important; } /* อีเมล / เบอร์โทร */
-
-			/* 2. 🏛️ แถบชื่อกลุ่มงาน (4 แถบสีน้ำเงินด้านบนของการ์ด Bento) */
-			.glass-card-light .bg-gradient-to-r { font-size: 15px !important; } /* ชื่อกลุ่มงาน (เช่น งานภารกิจอำนวยการ) */
-
-			/* 3. 🏷️ หัวข้อป้ายย่อยในกลุ่มงาน (คำว่า "หัวหน้างาน", "ผู้ปฏิบัติงาน", "ช่วยปฏิบัติงาน") */
-			.glass-card-light .p-4 p.font-semibold { font-size: 14px !important; }
-
-			/* 4. 👔 รายชื่อหัวหน้างาน */
-			.person-item:has(.ring-gov-emp, .ring-gov) p.font-semibold { font-size: 13px !important; } /* ชื่อหัวหน้า */
-			.person-item:has(.ring-gov-emp, .ring-gov) p.text-slate-500 { font-size: 11px !important; } /* ตำแหน่งหัวหน้า */
-
-			/* 5. 👥 รายชื่อผู้ปฏิบัติงาน */
-			.person-item p.font-medium.text-slate-800 { font-size: 12px !important; } /* ชื่อผู้ปฏิบัติงาน */
-			.person-item p.text-[10px]                { font-size: 10px !important; } /* ตำแหน่งผู้ปฏิบัติงาน */
-
-			/* 6. 🤝 รายชื่อช่วยปฏิบัติงาน */
-			.person-item p.text-[11px] { font-size: 11px !important; } /* ชื่อช่วยปฏิบัติงาน */
-			.person-item p.text-[9px]  { font-size: 9px !important; }  /* ตำแหน่งช่วยปฏิบัติงาน */
-
-			/* 7. ✨ กล่อง Spotlight (ฝั่งขวา) */
-			#spotlight-name     { font-size: 26px !important; } /* ชื่อรูปใหญ่ */
-			#spotlight-position { font-size: 15px !important; } /* ตำแหน่งรูปใหญ่ */
-			#spotlight-details  { font-size: 13px !important; } /* รายละเอียด/กลุ่มงาน/ติดต่อ */
-			#spotlight-type     { font-size: 12px !important; } /* ป้ายประเภทบุคลากร */
-		
-			/* ============================================================
-			   📌 ปรับเปลี่ยนสีตัวอักษรป้ายหัวข้อกลุ่มย่อย
-			   ============================================================ */
-
-			/* 1. 👔 สีหัวข้อ "หัวหน้างาน" (เปลี่ยนพร้อมกันทุกกลุ่มงาน) */
-			.glass-card-light p.text-sky-700,
-			.glass-card-light p.text-cyan-700,
-			.glass-card-light p.text-purple-700,
-			.glass-card-light p.text-pink-700 {
-				color: #0284c7 !important; /* เปลี่ยนโค้ดสีตามต้องการ (เช่น #003380) */
-			}
-
-			/* 2. 👥 สีหัวข้อ "ผู้ปฏิบัติงาน" (เปลี่ยนพร้อมกันทุกกลุ่มงาน) */
-			.glass-card-light p.text-slate-500 {
-				color: #003380 !important; /* เปลี่ยนโค้ดสีตามต้องการ */
-			}
-
-			/* 3. 🤝 สีหัวข้อ "ช่วยปฏิบัติงาน" (เปลี่ยนพร้อมกันทุกกลุ่มงาน) */
-			.glass-card-light p.text-amber-700 {
-				color: #475569 !important; /* เปลี่ยนโค้ดสีตามต้องการ */
-			}
-		
-		
-			/* ============================================================
-			   📌 ปรับขนาดรูปวงกลมบุคลากร (ความกว้างและความสูงต้องเท่ากัน)
-			   ============================================================ */
-
-			/* 1. 👑 รูป ผอ. (การ์ดบนสุด) */
-			#avatar-director {
-				width: 120px !important;  /* ค่าเดิม 96px (w-24) */
-				height: 120px !important;
-			}
-
-			/* 2. 👔 รูปหัวหน้างาน */
-			.person-item img.w-12 {
-				width: 76px !important;  /* ค่าเดิม 48px (w-12) */
-				height: 76px !important;
-			}
-
-			/* 3. 👥 รูปผู้ปฏิบัติงาน */
-			.person-item img.w-10 {
-				width: 67px !important;  /* ค่าเดิม 40px (w-10) */
-				height: 67px !important;
-			}
-
-			/* 4. 🤝 รูปช่วยปฏิบัติงาน */
-			.person-item img.w-9 {
-				width: 55px !important;  /* ค่าเดิม 36px (w-9) */
-				height: 55px !important;
-			}		
-	
-			/* ============================================================
-			   📌 ปรับความหนาและรูปแบบเส้นกรอบวงกลม
-			   ============================================================ */
-
-			/* 1. ปรับความหนาเส้นกรอบของรูป ผอ. */
-			#avatar-director {
-				border-width: 4px !important; /* ความหนาเส้นกรอบเดิม 4px (ปรับเป็น 3px, 5px ได้) */
-			}
-
-			/* 2. ปรับความหนาเส้นกรอบของบุคลากรทุกคนในกล่องย่อย */
-			.person-item img {
-				border-width: 4px !important; /* ความหนาเส้นกรอบเดิม 2px (ปรับเป็น 3px ได้) */
-			}
-
-			/* 3. ปรับเปลี่ยนสีเส้นกรอบตามประเภทบุคลากร */
-			.ring-gov      { border-color: #0284c7 !important; } /* ข้าราชการ (สีฟ้า) */
-			.ring-gov-emp  { border-color: #059669 !important; } /* พนักงานราชการ (สีเขียว) */
-			.ring-inst-emp { border-color: #7c3aed !important; } /* พนักงานสถาบัน (สีม่วง) */		
-		
-		
-		
-			/* 📌 ปรับระดับความฟุ้งและความเข้มของ Spotlight */
-			#spotlight-bg-glow {
-				filter: blur(1000px) !important;  /* ปรับความฟุ้ง (px ยิ่งมาก ยิ่งฟุ้งกระจาย) */
-				opacity: 1 !important;        /* ปรับความเข้มแสง (0.1 - 1.0) */
-				width: 12px !important;        /* ปรับความกว้างวงแสง */
-				height: 12px !important;       /* ปรับความสูงวงแสง */
-			}
-		
-		
     </style>
 </head>
 <body class="text-slate-800 relative min-h-screen pb-12">
@@ -302,41 +339,38 @@
     </div>
 
     <!-- Header Section -->
-    <header class="pt-10 pb-6 text-center px-4 relative z-10">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl title-header tracking-tight mb-3 cursor-default">
+    <header class="pt-8 pb-4 text-center px-4 relative z-10">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl title-header tracking-tight mb-2 cursor-default">
             โครงสร้างบุคลากรกองเทคโนโลยีดิจิทัล
         </h1>
 
         <!-- Quick Search Bar -->
-	<div id="search-box" class="max-w-xs sm:max-w-sm mx-auto relative mt-2">
-	  <!-- ส่วนของไอคอน: ปรับให้อยู่กึ่งกลางร่วมกับข้อความ -->
-	  <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-center pointer-events-none text-slate-400">
-		<div class="flex items-center justify-center w-full max-w-[170px] sm:max-w-[190px] pr-28">
-		  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-		  </svg>
-		</div>
-	  </div>
+        <div id="search-box" class="max-w-xs sm:max-w-sm mx-auto relative mt-2">
+          <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-center pointer-events-none text-slate-400">
+            <div class="flex items-center justify-center w-full max-w-[170px] sm:max-w-[190px] pr-28">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+          </div>
 
-	  <!-- ส่วนของ Input: เพิ่ม text-center และปรับ Padding ให้สมดุล -->
-	  <input type="text" 
-			 oninput="searchPersonnel(this.value)" 
-			 placeholder="ค้นหาชื่อ หรือ นามสกุล..." 
-			 class="w-full px-4 py-2 text-center text-xs sm:text-sm rounded-full bg-white/80 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white shadow-sm backdrop-blur-md transition">
-	</div>
-
+          <input type="text" 
+                 oninput="searchPersonnel(this.value)" 
+                 placeholder="ค้นหาชื่อ หรือ นามสกุล..." 
+                 class="w-full px-4 py-2 text-center text-xs sm:text-sm rounded-full bg-white/80 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white shadow-sm backdrop-blur-md transition">
+        </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-2">
-        <!-- สัดส่วน Grid 7 : 5 บนจอใหญ่ -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Grid 7 : 5 จัดความสมดุลด้านซ้ายและขวา -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
 
             <!-- ========================================== -->
             <!-- ฝั่งซ้าย (7/12): โครงสร้างองค์กร (BENTO GRID) -->
             <!-- ========================================== -->
             <div class="lg:col-span-7 xl:col-span-7 space-y-6">
 
-                <!-- 1. การ์ด ผอ. (Flush Top Bar: ชิดขอบบนสุด โค้งมน rounded-t-2xl) -->
+                <!-- 1. การ์ด ผอ. -->
                 <section>
                     <div id="item-director" 
                          data-type="gov"
@@ -344,7 +378,6 @@
                          onclick="selectPerson('director')" 
                          class="person-item active-gov glass-card-light rounded-2xl overflow-hidden cursor-pointer transition-all border border-slate-200/80 shadow-sm">
                         
-                        <!-- Flush Top Bar -->
                         <div class="w-full h-3 bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] rounded-t-2xl"></div>
 
                         <div class="p-5 flex flex-col sm:flex-row items-center gap-5">
@@ -363,9 +396,9 @@
                                 <div class="mt-2.5 pt-2 border-t border-slate-200/60 flex flex-wrap justify-center sm:justify-start gap-y-1 gap-x-4 text-xs text-slate-500">
                                     <span onclick="event.stopPropagation(); copyToClipboard('kiattisak.s@pi.ac.th', 'คัดลอกอีเมลเรียบร้อยแล้ว')" class="flex items-center gap-1 hover:text-sky-600 transition cursor-pointer" title="คลิกเพื่อคัดลอก">
                                         <svg class="w-4 h-4 text-sky-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-</svg>
+                                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                        </svg>
                                         kiattisak.s@pi.ac.th
                                     </span>
                                     <span onclick="event.stopPropagation(); copyToClipboard('02-590-1981', 'คัดลอกเบอร์โทรศัพท์เรียบร้อยแล้ว')" class="flex items-center gap-1 hover:text-sky-600 transition cursor-pointer" title="คลิกเพื่อคัดลอก">
@@ -378,19 +411,17 @@
                     </div>
                 </section>
 
-                <!-- 2. BENTO GRID 4 กลุ่มงาน (Integrated Full-Width Card Headers) -->
+                <!-- 2. BENTO GRID 4 กลุ่มงาน -->
                 <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                    <!-- ================= กลุ่มที่ 1 ================= -->
+                    <!-- กลุ่มที่ 1 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <!-- Integrated Full-Width Header -->
                             <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
                                 งานภารกิจอำนวยการ
                             </div>
 
                             <div class="p-4 space-y-3">
-                                <!-- หัวหน้างาน -->
                                 <div>
                                     <p class="text-[11px] font-semibold text-sky-700 mb-1.5">หัวหน้างาน</p>
                                     <div id="item-ubonrat" data-type="gov-emp" data-name="อุบลรัตน์ เทศนาบูรณ์" onclick="selectPerson('ubonrat')" 
@@ -404,7 +435,6 @@
                                     </div>
                                 </div>
 
-                                <!-- ผู้ปฏิบัติงาน -->
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
                                     
@@ -449,16 +479,14 @@
                         </div>
                     </div>
 
-                    <!-- ================= กลุ่มที่ 2 ================= -->
+                    <!-- กลุ่มที่ 2 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <!-- Integrated Full-Width Header -->
                             <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
                                 งานเทคโนโลยีระบบสารสนเทศ
                             </div>
 
                             <div class="p-4 space-y-3">
-                                <!-- หัวหน้างาน -->
                                 <div>
                                     <p class="text-[11px] font-semibold text-cyan-700 mb-1.5">หัวหน้างาน</p>
                                     <div id="item-thacha" data-type="gov-emp" data-name="ธชา ศรีนวลขาว" onclick="selectPerson('thacha')" class="person-item p-2 rounded-xl bg-white/80 border border-slate-200/80 hover:bg-cyan-50/50 cursor-pointer flex items-center gap-3 transition">
@@ -470,7 +498,6 @@
                                     </div>
                                 </div>
 
-                                <!-- ผู้ปฏิบัติงาน -->
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
                                     
@@ -515,16 +542,14 @@
                         </div>
                     </div>
 
-                    <!-- ================= กลุ่มที่ 3 ================= -->
+                    <!-- กลุ่มที่ 3 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <!-- Integrated Full-Width Header -->
                             <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
                                 งานเทคโนโลยีระบบคอมพิวเตอร์และเครือข่าย
                             </div>
 
                             <div class="p-4 space-y-3">
-                                <!-- หัวหน้างาน -->
                                 <div>
                                     <p class="text-[11px] font-semibold text-purple-700 mb-1.5">หัวหน้างาน</p>
                                     <div id="item-yuttachai" data-type="gov-emp" data-name="ยุทธชัย สุนทรวิภาต" onclick="selectPerson('yuttachai')" class="person-item p-2 rounded-xl bg-white/80 border border-slate-200/80 hover:bg-purple-50/50 cursor-pointer flex items-center gap-3 transition">
@@ -536,7 +561,6 @@
                                     </div>
                                 </div>
 
-                                <!-- ผู้ปฏิบัติงาน -->
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
                                     
@@ -556,7 +580,7 @@
                                 <p class="text-[11px] font-semibold text-amber-700 mb-1">ช่วยปฏิบัติงาน</p>
                                 
                                 <div id="item-anuchit-2" data-type="gov-emp" data-name="อนุชิต ดาศรี" onclick="selectPerson('anuchit')" class="person-item p-1.5 rounded-lg bg-white/40 hover:bg-amber-50/60 cursor-pointer flex items-center gap-2.5 transition">
-                                    <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102111212249308.png" onerror="handleAvatarError(this, 'อ')" class="w-9 h-9 rounded-full object-cover object-[center_12%] object-[center_12%] border-2 ring-gov-emp shrink-0">
+                                    <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102111212249308.png" onerror="handleAvatarError(this, 'อ')" class="w-9 h-9 rounded-full object-cover object-[center_12%] border-2 ring-gov-emp shrink-0">
                                     <div class="min-w-0">
                                         <p class="text-[11px] font-medium text-slate-700 truncate">นายอนุชิต ดาศรี</p>
                                         <p class="text-[9px] text-slate-400 truncate">นักจัดการงานทั่วไป</p>
@@ -580,16 +604,14 @@
                         </div>
                     </div>
 
-                    <!-- ================= กลุ่มที่ 4 ================= -->
+                    <!-- กลุ่มที่ 4 -->
                     <div class="glass-card-light rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/80 shadow-sm">
                         <div>
-                            <!-- Integrated Full-Width Header -->
                             <div class="w-full bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] text-white font-bold text-center py-2.5 px-3 text-sm tracking-wide shadow-sm">
                                 งานวิทยบริการและนวัตกรรม
                             </div>
 
                             <div class="p-4 space-y-3">
-                                <!-- หัวหน้างาน -->
                                 <div>
                                     <p class="text-[11px] font-semibold text-pink-700 mb-1.5">หัวหน้างาน</p>
                                     <div id="item-namfon" data-type="gov" data-name="น้ำฝน เอี่ยมวิริยาวัฒน์" onclick="selectPerson('namfon')" class="person-item p-2 rounded-xl bg-white/80 border border-slate-200/80 hover:bg-pink-50/50 cursor-pointer flex items-center gap-3 transition">
@@ -601,7 +623,6 @@
                                     </div>
                                 </div>
 
-                                <!-- ผู้ปฏิบัติงาน -->
                                 <div class="space-y-1.5">
                                     <p class="text-[11px] font-semibold text-slate-500 mb-1">ผู้ปฏิบัติงาน</p>
 
@@ -671,17 +692,17 @@
 
 
             <!-- ========================================== -->
-            <!-- ฝั่งขวา (5/12): SPOTLIGHT SHOWCASE         -->
+            <!-- ฝั่งขวา (5/12): SPOTLIGHT SHOWCASE (STICKY) -->
             <!-- ========================================== -->
-            <div class="lg:col-span-5 xl:col-span-5 sticky top-6 spotlight-3d-wrapper">
+            <div class="lg:col-span-5 xl:col-span-5 sticky top-4 sm:top-6 spotlight-3d-wrapper">
                 <div id="spotlight-card" class="spotlight-3d-card relative flex flex-col items-center">
 
-                    <!-- LAYER 0 (z-0): แสงออร่า (เพียว 2D / วางหลังรูปเด็ดขาด ไม่ใช้ translateZ) -->
-                    <div id="spotlight-bg-glow" class="glow-gov absolute top-4 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl opacity-75 pointer-events-none z-0 transition-all duration-300"></div>
+                    <!-- LAYER 0: แสงออร่า -->
+                    <div id="spotlight-bg-glow" class="glow-gov absolute top-4 left-1/2 -translate-x-1/2 rounded-full pointer-events-none z-0 transition-all duration-300"></div>
 
-                    <!-- LAYER 1 (z-10): รูปบุคคลไดคัท (ลอยทับแผ่นแสงออร่า 100%) -->
+                    <!-- LAYER 1: รูปบุคคลไดคัท -->
                     <div class="spotlight-layer-portrait relative z-10 flex justify-center -mb-5 w-full">
-                        <div class="relative w-72 h-96 sm:w-80 sm:h-[400px] flex items-end justify-center">
+                        <div class="relative w-72 h-96 sm:w-80 sm:h-[390px] flex items-end justify-center transition-all duration-300">
                             <img id="spotlight-img" 
                                  src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026101916312653088.png" 
                                  onerror="handleAvatarError(this, 'ก')"
@@ -690,10 +711,9 @@
                         </div>
                     </div>
 
-                    <!-- LAYER 2 (z-20): แผ่นการ์ดกระจกหน้า (พร้อม Flush Top Bar ชิดขอบบนสุด) -->
+                    <!-- LAYER 2: แผ่นการ์ดกระจกหน้า -->
                     <div id="spotlight-glass-box" class="spotlight-layer-card relative z-20 w-full glass-card-light rounded-3xl overflow-hidden bg-white/95 backdrop-blur-md border border-slate-200/80 shadow-2xl">
                         
-                        <!-- Flush Top Bar (ชิดขอบบนสุด โค้งมน rounded-t-3xl) -->
                         <div class="w-full h-3 bg-gradient-to-r from-[#003380] via-[#002266] to-[#001a4d] rounded-t-3xl"></div>
 
                         <div class="pt-5 pb-8 px-8 text-center space-y-4">
@@ -711,13 +731,12 @@
                             <!-- รายละเอียดกลุ่มงาน & ช่องทางติดต่อ -->
                             <div id="spotlight-details" class="pt-3 border-t border-slate-200/80 text-xs sm:text-sm text-slate-700 space-y-2.5">
                                 
-                                <!-- โซนติดต่อ ผอ. -->
                                 <div id="spotlight-contact-section" class="space-y-2">
                                     <div onclick="copyToClipboard('kiattisak.s@pi.ac.th', 'คัดลอกอีเมลเรียบร้อยแล้ว')" class="flex items-center justify-center gap-2 hover:text-sky-600 transition cursor-pointer" title="คลิกเพื่อคัดลอก">
                                         <svg class="w-4 h-4 text-sky-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-</svg>
+                                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                        </svg>
                                         <span id="spotlight-email" class="font-medium">kiattisak.s@pi.ac.th</span>
                                     </div>
                                     <div onclick="copyToClipboard('02-590-1981', 'คัดลอกเบอร์โทรศัพท์เรียบร้อยแล้ว')" class="flex items-center justify-center gap-2 hover:text-sky-600 transition cursor-pointer" title="คลิกเพื่อคัดลอก">
@@ -726,7 +745,6 @@
                                     </div>
                                 </div>
 
-                                <!-- โซนกลุ่มงาน -->
                                 <div id="spotlight-group-section" class="space-y-1.5 hidden text-center">
                                     <p class="text-slate-600">
                                         <span class="font-semibold text-sky-800">กลุ่มงาน:</span> 
@@ -740,7 +758,6 @@
 
                             </div>
 
-                            <!-- ป้ายประเภทบุคลากร วางล่างสุดของการ์ด -->
                             <div class="pt-2">
                                 <span id="spotlight-type" class="inline-block px-5 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-sky-100 text-sky-800 border border-sky-300 shadow-sm">
                                     ข้าราชการ
@@ -762,9 +779,7 @@
     </footer>
 
 
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT STATE & ENGINE LOGIC            -->
-    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         const personnelData = {
             'director': {
@@ -953,14 +968,12 @@
                 document.getElementById('spotlight-name').textContent = person.name;
                 document.getElementById('spotlight-position').textContent = person.position;
                 
-                // ปรับป้ายประเภทบุคลากร
                 const typeEl = document.getElementById('spotlight-type');
                 typeEl.textContent = person.type;
                 typeEl.className = `inline-block px-5 py-1.5 rounded-full text-xs sm:text-sm font-semibold border shadow-sm ${person.typeClass}`;
 
-                // ปรับเปลี่ยนสีรัศมีแสงออร่าด้านหลังรูปถ่าย
                 const bgGlowEl = document.getElementById('spotlight-bg-glow');
-                bgGlowEl.className = `absolute top-4 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl opacity-75 pointer-events-none z-0 transition-all duration-300 ${person.glowClass}`;
+                bgGlowEl.className = `absolute top-4 left-1/2 -translate-x-1/2 rounded-full pointer-events-none z-0 transition-all duration-300 ${person.glowClass}`;
 
                 const contactSection = document.getElementById('spotlight-contact-section');
                 const groupSection = document.getElementById('spotlight-group-section');
@@ -1081,7 +1094,7 @@
             });
         });
 
-        /* 🌊 HTML5 Canvas Dot Matrix Warp (รัศมี 260px พริ้วกว้างขึ้น) */
+        /* 🌊 HTML5 Canvas Dot Matrix Warp */
         (function initDotMatrixWarp() {
             const canvas = document.getElementById('bg-canvas');
             const ctx = canvas.getContext('2d');
