@@ -42,14 +42,19 @@
             --dot-color: rgba(2, 132, 199, 0.20);
         }
 
-        /* 📌 1. เปิดระบบ Scroll ภายใน iframe + ล็อกไม่ให้การสโครลทะลุไปหน้าเว็บหลัก (overscroll-behavior: contain) */
-        html, body {
-            overflow-x: hidden;
-            overflow-y: auto;
-            min-height: 100vh;
-            scroll-behavior: smooth;
-            overscroll-behavior: contain; /* ป้องกัน Scroll ทะลุไปหน้าหลักเมื่อสโครลสุดขอบ */
-        }
+		/* 📌 เปิดการ Scroll แกน Y ภายใน iframe */
+		html {
+			height: 100%;
+			overflow-x: hidden;
+			overflow-y: auto !important; /* สั่งเปิดการสโครลแนวตั้ง */
+			scroll-behavior: smooth;
+		}
+
+		body {
+			min-height: 100%;
+			overflow-x: hidden;
+			position: relative;
+		}
 
         /* 🎨 Custom Scrollbar ธีมองค์กร */
         ::-webkit-scrollbar {
