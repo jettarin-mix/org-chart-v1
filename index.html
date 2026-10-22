@@ -176,7 +176,7 @@
             .sticky { position: relative !important; top: 0 !important; }
         }
 
-        /* 📌 ปรับขนาดตัวอักษรแยกตามกล่อง (ค่ามาตรฐานสำหรับจอทั่วมุม/1366x768) */
+        /* 📌 ปรับขนาดตัวอักษรแยกตามกล่อง */
         #item-director h2   { font-size: 20px !important; }
         #item-director p    { font-size: 14px !important; }
         #item-director span { font-size: 12px !important; }
@@ -240,7 +240,7 @@
 
 			/* 1. ส่วนหัวเรื่อง และแถบค้นหา */
 			.title-header {
-				font-size: 2.5rem !important; /* 36px */
+				font-size: 2.5rem !important;
 			}
 			#search-box input {
 				font-size: 0.875rem !important;
@@ -249,7 +249,6 @@
 			}
 			.filter-btn {
 				font-size: 0.8125rem !important;
-				padding: 0.35rem 0.85rem !important;
 			}
 
 			/* 2. ขยายการ์ด ผอ. ยอดผังองค์กร */
@@ -375,10 +374,6 @@
                 padding-bottom: 0.2rem !important;
                 font-size: 0.75rem !important;
             }
-            .filter-btn {
-                padding: 0.15rem 0.55rem !important;
-                font-size: 0.68rem !important;
-            }
             #item-director {
                 margin-bottom: 0.2rem !important;
             }
@@ -452,19 +447,23 @@
                                class="w-full pl-10 pr-4 py-1.5 text-center text-xs rounded-full bg-white/80 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white shadow-sm backdrop-blur-md transition">
                     </div>
 
-                    <!-- ปุ่มคลิกแยกประเภทบุคลากร -->
+                    <!-- 🔴 ปุ่มคลิกแยกประเภทบุคลากร (วงกลมชิดขอบขวาของแคปซูล) -->
                     <div class="flex flex-wrap items-center justify-center gap-1.5 pt-0.5">
-                        <button onclick="filterType('all')" id="btn-filter-all" class="filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-sky-600 text-white shadow-md">
-                            ทั้งหมด
+                        <button onclick="filterType('all')" id="btn-filter-all" class="filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-sky-600 text-white shadow-md flex items-center gap-2">
+                            <span>ทั้งหมด</span>
+                            <span id="count-all" class="w-6 h-6 rounded-full bg-white text-sky-600 flex items-center justify-center text-[11px] font-bold shadow-xs shrink-0">0</span>
                         </button>
-                        <button onclick="filterType('gov')" id="btn-filter-gov" class="filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-sky-50 text-sky-800 border border-sky-200 shadow-sm">
-                            ข้าราชการ
+                        <button onclick="filterType('gov')" id="btn-filter-gov" class="filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-sky-50 text-sky-800 border border-sky-200 shadow-sm flex items-center gap-2">
+                            <span>ข้าราชการ</span>
+                            <span id="count-gov" class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-[11px] font-bold shrink-0">0</span>
                         </button>
-                        <button onclick="filterType('gov-emp')" id="btn-filter-gov-emp" class="filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-sm">
-                            พนักงานราชการ
+                        <button onclick="filterType('gov-emp')" id="btn-filter-gov-emp" class="filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-sm flex items-center gap-2">
+                            <span>พนักงานราชการ</span>
+                            <span id="count-gov-emp" class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[11px] font-bold shrink-0">0</span>
                         </button>
-                        <button onclick="filterType('inst-emp')" id="btn-filter-inst-emp" class="filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-purple-50 text-purple-800 border border-purple-200 shadow-sm">
-                            พนักงานสถาบัน
+                        <button onclick="filterType('inst-emp')" id="btn-filter-inst-emp" class="filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-purple-50 text-purple-800 border border-purple-200 shadow-sm flex items-center gap-2">
+                            <span>พนักงานสถาบัน</span>
+                            <span id="count-inst-emp" class="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[11px] font-bold shrink-0">0</span>
                         </button>
                     </div>
                 </section>
@@ -718,7 +717,6 @@
                                         <p class="text-[9px] text-slate-400 truncate">นักวิชาการคอมพิวเตอร์</p>
                                     </div>
                                 </div>
-                                <!-- 📌 เพิ่ม นายกษิเดช เศรษฐวนิช ต่อท้ายนายเจตรินทร์ -->
                                 <div id="item-kasidech-2" data-type="inst-emp" data-name="กษิเดช เศรษฐวนิช นักวิชาการคอมพิวเตอร์" onclick="selectPerson('kasidech')" class="person-item p-1 rounded-lg bg-white/40 hover:bg-amber-50/60 cursor-pointer flex items-center gap-2 transition">
                                     <img src="https://backend-webpi.pi.ac.th/ewt/digital/images/articleimg_2026102110510330476.png" onerror="handleAvatarError(this, 'ก')" class="w-8 h-8 rounded-full object-cover object-[center_12%] border-2 ring-inst-emp shrink-0">
                                     <div class="min-w-0">
@@ -1122,6 +1120,21 @@
             }
         };
 
+        /* 📊 คำนวณและอัปเดตตัวเลขจำนวนคนจริง ขึ้นบนปุ่มกรอง */
+        function updateFilterCounts() {
+            const list = Object.values(personnelData);
+            
+            const total = list.length;
+            const gov = list.filter(p => p.typeKey === 'gov').length;
+            const govEmp = list.filter(p => p.typeKey === 'gov-emp').length;
+            const instEmp = list.filter(p => p.typeKey === 'inst-emp').length;
+
+            if (document.getElementById('count-all')) document.getElementById('count-all').textContent = total;
+            if (document.getElementById('count-gov')) document.getElementById('count-gov').textContent = gov;
+            if (document.getElementById('count-gov-emp')) document.getElementById('count-gov-emp').textContent = govEmp;
+            if (document.getElementById('count-inst-emp')) document.getElementById('count-inst-emp').textContent = instEmp;
+        }
+
         function selectPerson(id) {
             const person = personnelData[id];
             if (!person) return;
@@ -1175,20 +1188,56 @@
             }, 180);
         }
 
+        /* 🎨 สลับสไตล์ปุ่มกรอง + วงกลมชิดขอบขวา */
         function filterType(typeKey) {
             currentFilter = typeKey;
 
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = "filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 text-slate-700 border border-slate-200 shadow-sm";
-            });
+            const config = {
+                'all': {
+                    btnId: 'btn-filter-all', countId: 'count-all',
+                    activeBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-sky-600 text-white shadow-md flex items-center gap-2",
+                    activeCount: "w-6 h-6 rounded-full bg-white text-sky-600 flex items-center justify-center text-[11px] font-bold shadow-xs shrink-0",
+                    inactiveBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm flex items-center gap-2",
+                    inactiveCount: "w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[11px] font-bold shrink-0"
+                },
+                'gov': {
+                    btnId: 'btn-filter-gov', countId: 'count-gov',
+                    activeBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-sky-600 text-white shadow-md flex items-center gap-2",
+                    activeCount: "w-6 h-6 rounded-full bg-white text-sky-600 flex items-center justify-center text-[11px] font-bold shadow-xs shrink-0",
+                    inactiveBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-sky-50 text-sky-800 border border-sky-200 shadow-sm flex items-center gap-2",
+                    inactiveCount: "w-6 h-6 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-[11px] font-bold shrink-0"
+                },
+                'gov-emp': {
+                    btnId: 'btn-filter-gov-emp', countId: 'count-gov-emp',
+                    activeBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-emerald-600 text-white shadow-md flex items-center gap-2",
+                    activeCount: "w-6 h-6 rounded-full bg-white text-emerald-600 flex items-center justify-center text-[11px] font-bold shadow-xs shrink-0",
+                    inactiveBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-sm flex items-center gap-2",
+                    inactiveCount: "w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[11px] font-bold shrink-0"
+                },
+                'inst-emp': {
+                    btnId: 'btn-filter-inst-emp', countId: 'count-inst-emp',
+                    activeBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-purple-600 text-white shadow-md flex items-center gap-2",
+                    activeCount: "w-6 h-6 rounded-full bg-white text-purple-600 flex items-center justify-center text-[11px] font-bold shadow-xs shrink-0",
+                    inactiveBtn: "filter-btn pl-3.5 pr-1 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-white/80 hover:bg-purple-50 text-purple-800 border border-purple-200 shadow-sm flex items-center gap-2",
+                    inactiveCount: "w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[11px] font-bold shrink-0"
+                }
+            };
 
-            const activeBtn = document.getElementById(`btn-filter-${typeKey}`);
-            if (activeBtn) {
-                if (typeKey === 'gov') activeBtn.className = "filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-sky-600 text-white shadow-md";
-                else if (typeKey === 'gov-emp') activeBtn.className = "filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-emerald-600 text-white shadow-md";
-                else if (typeKey === 'inst-emp') activeBtn.className = "filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-purple-600 text-white shadow-md";
-                else activeBtn.className = "filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 bg-sky-600 text-white shadow-md";
-            }
+            Object.keys(config).forEach(key => {
+                const item = config[key];
+                const btnEl = document.getElementById(item.btnId);
+                const countEl = document.getElementById(item.countId);
+
+                if (btnEl && countEl) {
+                    if (key === typeKey) {
+                        btnEl.className = item.activeBtn;
+                        countEl.className = item.activeCount;
+                    } else {
+                        btnEl.className = item.inactiveBtn;
+                        countEl.className = item.inactiveCount;
+                    }
+                }
+            });
 
             applyFilters();
         }
@@ -1368,6 +1417,9 @@
 			createGrid();
 			render();
 		})();
+
+        // เรียกใช้นับจำนวนบุคลากรขึ้นปุ่มทันทีเมื่อโหลดหน้าเว็บ
+        updateFilterCounts();
     </script>
 </body>
 </html>
