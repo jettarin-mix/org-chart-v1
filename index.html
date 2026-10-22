@@ -1286,76 +1286,80 @@
             });
         });
 
-        /* 🌊 HTML5 Canvas Dot Matrix Warp Background */
-        (function initDotMatrixWarp() {
-            const canvas = document.getElementById('bg-canvas');
-            const ctx = canvas.getContext('2d');
-            
-            let width = canvas.width = window.innerWidth;
-            let height = canvas.height = window.innerHeight;
+		/* 🌊 HTML5 Canvas Dot Matrix Warp Background (ปลดล็อกให้ทำงานเสถียรใน iframe 100%) */
+				(function initDotMatrixWarp() {
+					const canvas = document.getElementById('bg-canvas');
+					if (!canvas) return;
+					const ctx = canvas.getContext('2d');
 
-            const spacing = 32;
-            let dots = [];
-            let mouse = { x: -1000, y: -1000 };
+					let width = canvas.width = window.innerWidth;
+					let height = canvas.height = window.innerHeight;
 
-            const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768;
+					const spacing = 32;
+					let dots = [];
+					let mouse = { x: -1000, y: -1000 };
 
-            function createGrid() {
-                dots = [];
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
+					function createGrid() {
+						dots = [];
+						width = canvas.width = window.innerWidth;
+						height = canvas.height = window.innerHeight;
 
-                for (let x = spacing / 2; x < width; x += spacing) {
-                    for (let y = spacing / 2; y < height; y += spacing) {
-                        dots.push({ baseX: x, baseY: y, x: x, y: y, r: 2 });
-                    }
-                }
-            }
+						for (let x = spacing / 2; x < width; x += spacing) {
+							for (let y = spacing / 2; y < height; y += spacing) {
+								dots.push({ baseX: x, baseY: y, x: x, y: y, r: 2 });
+							}
+						}
+					}
 
-            window.addEventListener('resize', createGrid);
-            window.addEventListener('mousemove', (e) => {
-                mouse.x = e.clientX;
-                mouse.y = e.clientY;
-            });
+					window.addEventListener('resize', createGrid);
 
-            function render() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dot-color') || 'rgba(2, 132, 199, 0.20)';
+					// ดักจับตำแหน่งเมาส์ระดับ document เพื่อให้ทำงานใน iframe ได้สมบูรณ์
+					document.addEventListener('mousemove', (e) => {
+						mouse.x = e.clientX;
+						mouse.y = e.clientY;
+					});
 
-                for (let i = 0; i < dots.length; i++) {
-                    const dot = dots[i];
-                    
-                    if (!isMobile) {
-                        const dx = mouse.x - dot.baseX;
-                        const dy = mouse.y - dot.baseY;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        const maxDist = 260;
+					document.addEventListener('mouseleave', () => {
+						mouse.x = -1000;
+						mouse.y = -1000;
+					});
 
-                        if (dist < maxDist) {
-                            const angle = Math.atan2(dy, dx);
-                            const normDist = 1 - dist / maxDist;
-                            const factor = Math.pow(normDist, 1.3) * 20;
-                            dot.x = dot.baseX - Math.cos(angle) * factor;
-                            dot.y = dot.baseY - Math.sin(angle) * factor;
-                            dot.r = 2 + Math.pow(normDist, 1.2) * 4;
-                        } else {
-                            dot.x += (dot.baseX - dot.x) * 0.08;
-                            dot.y += (dot.baseY - dot.y) * 0.08;
-                            dot.r += (2 - dot.r) * 0.08;
-                        }
-                    }
+					function render() {
+						ctx.clearRect(0, 0, width, height);
+						ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dot-color') || 'rgba(2, 132, 199, 0.20)';
 
-                    ctx.beginPath();
-                    ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+						for (let i = 0; i < dots.length; i++) {
+							const dot = dots[i];
 
-                requestAnimationFrame(render);
-            }
+							const dx = mouse.x - dot.baseX;
+							const dy = mouse.y - dot.baseY;
+							const dist = Math.sqrt(dx * dx + dy * dy);
+							const maxDist = 260;
 
-            createGrid();
-            render();
-        })();
+							if (dist < maxDist) {
+								const angle = Math.atan2(dy, dx);
+								const normDist = 1 - dist / maxDist;
+								const factor = Math.pow(normDist, 1.3) * 20;
+								dot.x = dot.baseX - Math.cos(angle) * factor;
+								dot.y = dot.baseY - Math.sin(angle) * factor;
+								dot.r = 2 + Math.pow(normDist, 1.2) * 4;
+							} else {
+								dot.x += (dot.baseX - dot.x) * 0.08;
+								dot.y += (dot.baseY - dot.y) * 0.08;
+								dot.r += (2 - dot.r) * 0.08;
+							}
+
+							ctx.beginPath();
+							ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+							ctx.fill();
+						}
+
+						requestAnimationFrame(render);
+					}
+
+					createGrid();
+					render();
+				})();
     </script>
 </body>
 </html>
