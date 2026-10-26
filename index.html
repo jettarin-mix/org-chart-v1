@@ -397,6 +397,35 @@
             .person-item img.w-10 { width: 35px !important; height: 35px !important; }
             .person-item img.w-8  { width: 30px !important; height: 30px !important; }
         } */
+		
+		
+		/* 1. ปลดล็อกหัวข้อกลุ่มงานให้ขึ้นบรรทัดใหม่ได้แบบสมดุล */
+		.glass-card-light .bg-gradient-to-r {
+			white-space: normal !important;
+			text-overflow: clip !important;
+			overflow: visible !important;
+			line-height: 1.25 !important;
+			min-height: 38px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		/* 2. ปลดล็อกชื่อและตำแหน่งบุคลากรไม่ให้โดนตัดด้วย ... */
+		.person-item p.truncate {
+			white-space: normal !important;
+			text-overflow: clip !important;
+			overflow: visible !important;
+			word-break: break-word;
+			line-height: 1.25 !important;
+		}
+
+		/* 3. ปรับขนาดตัวอักษรชื่อและเพิ่มพื้นที่ฝั่งขวา */
+		.person-item p.font-semibold, 
+		.person-item p.font-medium {
+			font-size: 11px !important;
+		}		
+		
     </style>
 </head>
 <body class="text-slate-800 relative min-h-screen pb-8">
