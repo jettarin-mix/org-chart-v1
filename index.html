@@ -435,6 +435,55 @@
 			display: block !important;
 		}	
 		
+		/* 📌 ปลดล็อก Spotlight ฝั่งขวาให้ขยายเต็มความกว้างของกรอบ (Full Width) */
+		.spotlight-3d-wrapper,
+		#spotlight-card {
+			width: 100% !important;
+		}
+
+		/* 1. ปลดล็อกกล่องกระจก Spotlight ให้กว้างเต็ม 100% ของคอลัมน์ */
+		#spotlight-glass-box {
+			max-width: 100% !important;
+			width: 100% !important;
+		}
+
+		/* 2. ปรับกรอบรูปคนให้ขยายเต็ม 100% และคำนวณความสูงแบบไดนามิก */
+		.spotlight-layer-portrait {
+			width: 100% !important;
+		}
+
+		.spotlight-layer-portrait > div {
+			width: 100% !important;
+			max-width: 100% !important;
+			height: 380px !important; /* ปรับความสูงรูปคนให้ได้สัดส่วนรับกับความกว้าง */
+		}
+
+		#spotlight-img {
+			max-height: 100% !important;
+			width: auto !important;
+			object-fit: contain !important;
+		}
+
+		/* 3. ปรับขนาดตัวอักษรให้ขยายยืดหยุ่นตามความกว้างกล่อง (Responsive Typography) */
+		#spotlight-name {
+			font-size: clamp(20px, 1.5vw, 28px) !important;
+			line-height: 1.3 !important;
+		}
+
+		#spotlight-position {
+			font-size: clamp(13px, 0.9vw, 16px) !important;
+		}
+
+		#spotlight-details {
+			font-size: clamp(12px, 0.85vw, 15px) !important;
+		}
+
+		/* 4. ปรับขนาดแสงออร่าพื้นหลังให้ขยายตาม */
+		#spotlight-bg-glow {
+			width: 80% !important;
+			height: 260px !important;
+		}
+		
 		
     </style>
 </head>
